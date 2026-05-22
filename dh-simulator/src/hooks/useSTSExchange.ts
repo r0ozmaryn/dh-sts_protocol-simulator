@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable prefer-const */
 import { useState, useCallback } from "react";
@@ -6,7 +5,7 @@ import type { SimulationState, SecurityMode, NetworkLog } from "../types/simulat
 import { modPow } from "../crypto/math";
 import { signRSA, encryptAES, decryptAES, generateRSAKeyPair, verifyRSA } from "../crypto/primitives";
 
-// const aliceRSA = generateRSAKeyPair(61n, 53n);
+const aliceRSA = generateRSAKeyPair(61n, 53n);
 const bobRSA = generateRSAKeyPair(47n, 43n);
 
 const INITIAL_STATE: SimulationState = {
@@ -56,7 +55,6 @@ export function useSTSExchange(pStr: string, gStr: string) {
       const g = BigInt(gStr);
       const mode = prev.securityMode;
 
-      // Аліса генерує свій ефемерний секрет 'a'
       const a = BigInt(Math.floor(Math.random() * 900) + 100);
       const A = modPow(g, a, p);
 
@@ -65,10 +63,9 @@ export function useSTSExchange(pStr: string, gStr: string) {
         createLog("Alice", "Bob", "info", `Аліса відправляє пакет M1 з точкою групи A = ${A}`)
       ];
 
-      // Визначаємо поведінку Єви залежно від наявності атаки в режимі
       const isMitm = mode === "PLAIN_DH_MITM" || mode === "STS_SECURE_MITM";
       const e1 = BigInt(Math.floor(Math.random() * 900) + 100);
-      const E1 = isMitm ? modPow(g, e1, p) : A; // Хакер підміняє, або пасивний дріт копіює
+      const E1 = isMitm ? modPow(g, e1, p) : A;
 
       if (isMitm) {
         newLogs.push(createLog("Eve", "System", "warning", `[MitM АКТИВОВАНО]: Єва перехопила точку Аліси A = ${A}`));
@@ -102,7 +99,6 @@ export function useSTSExchange(pStr: string, gStr: string) {
       const b = BigInt(Math.floor(Math.random() * 900) + 100);
       const B = modPow(g, b, p);
 
-      // Боб бере те, що прийшло з віртуального каналу (fakeE1)
       const receivedByBob = BigInt(prev.eve.fakeE1);
       const K_Bob = modPow(receivedByBob, b, p);
 
@@ -112,7 +108,6 @@ export function useSTSExchange(pStr: string, gStr: string) {
         createLog("Bob", "Alice", "info", `Боб обчислив сеансовий ключ K_Bob = ${K_Bob}`)
       ];
 
-      // Визначаємо поведінку Єви для другого кроку
       const isMitm = mode === "PLAIN_DH_MITM" || mode === "STS_SECURE_MITM";
       const e2 = BigInt(Math.floor(Math.random() * 900) + 100);
       const E2 = isMitm ? modPow(g, e2, p) : B;
@@ -127,7 +122,6 @@ export function useSTSExchange(pStr: string, gStr: string) {
         newLogs.push(createLog("Eve", "Alice", "info", `[ПАСИВНИЙ ТРАНЗИТ]: Пакет Боба передається до Аліси в чистому вигляді.`));
       }
 
-      // ФОРМУВАННЯ КРИПТОГРАМИ В РЕЖИМАХ STS
       let generatedPackage = "";
       const isSts = mode === "STS_SECURE" || mode === "STS_SECURE_MITM";
 
@@ -155,7 +149,7 @@ export function useSTSExchange(pStr: string, gStr: string) {
     });
   }, [pStr, gStr]);
 
-// --- РАУНД 3: АЛІСА ВЕРИФІКУЄ ТА ФІНАЛІЗУЄ СЕСІЮ ---
+  //Крок 3: Аліса верифікує та фіналізує сесію
   const runRound3 = useCallback(() => {
     setState(prev => {
       const p = BigInt(pStr);
@@ -215,9 +209,7 @@ export function useSTSExchange(pStr: string, gStr: string) {
         };
       }
 
-      // --- ГІЛКИ ДЛЯ АНОНІМНОГО РЕЖИМУ (PLAIN_DH) ---
       if (isMitm) {
-        // Режим PLAIN_DH_MITM (Атака успішна)
         newLogs.push(createLog("Alice", "Bob", "success", "Анонімний Діффі-Хеллман завершено. Аліса зафіксувала ключ."));
         newLogs.push(createLog("Eve", "System", "success", `[АТАКА УСПІШНА]: Побудовано міст перехоплення трафіку! K_AE = ${K_Eve_Alice}, K_EB = ${prev.eve.computedKeyWithBob}`));
         return {
@@ -228,7 +220,6 @@ export function useSTSExchange(pStr: string, gStr: string) {
           logs: [...prev.logs, ...newLogs]
         };
       } else {
-        // Режим PLAIN_DH (Чесний анонімний обмін)
         newLogs.push(createLog("Alice", "Bob", "success", "Чесний анонімний Діффі-Хеллман успішно завершено. Ключі сторін синхронні."));
         return {
           ...prev,

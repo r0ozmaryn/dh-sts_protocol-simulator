@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 export type SecurityMode = 
   | "PLAIN_DH"
   | "PLAIN_DH_MITM"
@@ -13,22 +12,6 @@ export type HandshakeStep =
   | "COMPLETED"
   | "FAILED";
 
-
-// Повідомлення M1 (Alice -> Bob)
-export interface PacketM1 {
-  A: string;        // Ефемерний відкритий ключ Аліси (як рядок BigInt)
-}
-
-// Повідомлення M2 (Bob -> Alice)
-export interface PacketM2 {
-  B: string;        // Ефемерний відкритий ключ Боба (як рядок BigInt)
-  C_B: string;      // Симетрично зашифрований блок (ЕЦП Боба + його сертифікат/ідентифікатор)
-}
-
-// Повідомлення M3 (Alice -> Bob)
-export interface PacketM3 {
-  C_A: string;      // Симетрично зашифрований блок (ЕЦП Аліси + її сертифікат/ідентифікатор)
-}
 
 export interface NetworkLog {
   id: string;
@@ -52,8 +35,8 @@ export interface SimulationState {
   alice: AgentState;
   bob: AgentState;
   eve: {
-    fake_e1_private: string; // ДОДАТИ: таємне число e1
-    fake_e2_private: string; // ДОДАТИ: таємне число e2
+    fake_e1_private: string;
+    fake_e2_private: string;
     interceptedA: string;
     interceptedB: string;
     fakeE1: string;

@@ -22,7 +22,6 @@ export const HackerConsole: React.FC<EveConsoleProps> = ({ securityMode, current
         : "border-slate-800 opacity-30 grayscale select-none pointer-events-none"
     }`}>
       
-      {/* 🔒 ЗАГЛУШКА ДЛЯ НЕАКТИВНОГО РЕЖИМУ (Показується тільки коли MitM вимкнено) */}
       {!isMitmActive && (
         <div className="absolute inset-0 bg-slate-950/70 backdrop-blur-[1px] flex flex-col items-center justify-center z-10 p-4 text-center">
           <span className="text-2xl mb-1">🔒</span>

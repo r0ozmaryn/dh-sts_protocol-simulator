@@ -24,7 +24,6 @@ export const ConfigPanel: React.FC<ConfigPanelProps> = ({
     { id: "STS_SECURE_MITM", label: "MitM на STS" },
   ];
 
-  // Маппер кольорів для активного стану кнопок (захист від злітання стилів Tailwind)
   const activeStyles: Record<SecurityMode, string> = {
     PLAIN_DH: "bg-blue-600 text-white shadow",
     PLAIN_DH_MITM: "bg-amber-500 text-slate-950 shadow",
@@ -49,10 +48,8 @@ export const ConfigPanel: React.FC<ConfigPanelProps> = ({
         🛠️ Панель Глобальної Конфігурації Протоколу
       </h2>
       
-      {/* Повертаємо класичну трьохколонкову сітку з вирівнюванням по нижньому краю */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-end">
 
-        {/* 1. Блок параметрів групи */}
         <div className="space-y-2">
           <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider">Параметри групи (BigInt)</label>
           <div className="flex gap-4">
@@ -79,7 +76,6 @@ export const ConfigPanel: React.FC<ConfigPanelProps> = ({
           </div>
         </div>
 
-        {/* 2. Повертаємо ідеальний капсульний перемикач */}
         <div className="space-y-2">
           <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider">Вибір аналітичного сценарію</label>
           <div className="flex rounded-lg bg-slate-850 p-1 border border-slate-700 min-h-[38px]">
@@ -100,7 +96,6 @@ export const ConfigPanel: React.FC<ConfigPanelProps> = ({
           </div>
         </div>
 
-        {/* 3. Кнопки керування симуляцією */}
         <div className="flex gap-3">
           <button
             onClick={onRunStep}

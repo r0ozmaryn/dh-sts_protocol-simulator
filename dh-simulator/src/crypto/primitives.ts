@@ -39,14 +39,13 @@ export function verifyRSA(message: string, signature: bigint, publicKey: RSAPubl
 }
 
 // Симетричне "шифрування" для STS Handshake на базі спільного ключа K (імітація AES)
-// Перетворює об'єкт у XOR-кований шістнадцятковий рядок, щоб Єва бачила "кашу"
+// Перетворює об'єкт у XOR-кований шістнадцятковий рядок, щоб Єва бачила кашу
 export function encryptAES(plainText: string, key: bigint): string {
   let result = "";
   const keyStr = key.toString();
   for (let i = 0; i < plainText.length; i++) {
     const charCode = plainText.charCodeAt(i);
     const keyChar = keyStr.charCodeAt(i % keyStr.length);
-    // Робимо XOR операцію і переводимо в HEX
     const encrypted = charCode ^ keyChar;
     result += encrypted.toString(16).padStart(2, '0');
   }
