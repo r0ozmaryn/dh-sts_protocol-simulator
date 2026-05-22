@@ -5,7 +5,6 @@ import type { SimulationState, SecurityMode, NetworkLog } from "../types/simulat
 import { modPow } from "../crypto/math";
 import { signRSA, encryptAES, decryptAES, generateRSAKeyPair, verifyRSA } from "../crypto/primitives";
 
-const aliceRSA = generateRSAKeyPair(61n, 53n);
 const bobRSA = generateRSAKeyPair(47n, 43n);
 
 const INITIAL_STATE: SimulationState = {
